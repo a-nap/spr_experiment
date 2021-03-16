@@ -163,7 +163,7 @@ Template("experiment.csv", row =>
             .log()
             .wait()
             .remove()
-            .callback(getTimer("timeout").stop())
+            // .callback(getTimer("timeout").stop())
         // ,
         // getTimer("timeout")
         //     .wait()
