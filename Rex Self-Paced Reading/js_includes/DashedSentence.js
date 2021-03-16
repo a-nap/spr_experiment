@@ -24,7 +24,7 @@ jqueryWidget: {
                "Value of 'mode' option for DashedSentence controller must be either " +
                "'self-paced reading' or 'speeded acceptability'.");
         this.display = dget(this.options, "display", "dashed");
-        this.blankText = dget(this.options, "blankText", "\u2014\u2014"/*mdash*/);
+        this.blankText = dget(this.options, "blankText", "\u2014\u2014");// Replace with mdash
         this.wordTime = dget(this.options, "wordTime", this.display == "in place" ? 400 : 300); // Only for speeded accpetability.
         this.wordPauseTime = dget(this.options, "wordPauseTime", this.display == "in place" ? 0 : 100); // Ditto.
         this.showAhead = dget(this.options, "showAhead", true);
