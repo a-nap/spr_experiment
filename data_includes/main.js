@@ -68,7 +68,7 @@ Header(
     newVar("AGE").global(),
     newVar("GENDER").global(),
     newVar("HAND").global(),
-    newVar("ACCURACY", []).global() 
+    newVar("ACCURACY", []).global()
 )
  // Add the particimant info to all trials' results lines
 .log( "id"     , getVar("ID") )
@@ -234,7 +234,7 @@ newTrial("instructions",
 Template("exercise.csv", row =>
   newTrial("exercise",
            // Dashed sentence
-           newController("DashedSentence", {s : row.SENTENCE})
+           newController("SelfPacedReadingParadigmSentence", {s : row.SENTENCE, splitRegex: /\*/})
            .center()
            .print()
            .log()
