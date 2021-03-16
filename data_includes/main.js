@@ -38,7 +38,7 @@ newTrial("participants",
     defaultText
         .print()
     ,
-    newText("<div class='fancy'><h2>Zur Auswertung der Ergebnisse benötigen wir folgende Informationen.<brSie werden streng anonym behandelt.</h2></div>")
+    newText("<div class='fancy'><h2>Zur Auswertung der Ergebnisse benötigen wir folgende Informationen.<br>Sie werden streng anonym behandelt.</h2></div>")
     ,
     newText("participantID", "<b>Bitte tragen Sie Ihre Teilnehmer-ID ein. (bitte Eintrag durch Eingabetaste bestätigen)</b>")
     ,
@@ -146,6 +146,16 @@ newTrial( "start_experiment" ,
 
 // Experimental trial
 Template("experiment.csv", row =>
+    newText("<h1>\*</h1>")
+        .center()
+        .print()
+    ,
+    newKey(" ")
+        .wait()
+    ,
+    newTimer("timeout", 10000)
+        .start()
+    ,
     newTrial( "experiment",
         newController("DashedSentence", {s : row.SENTENCE})
             .center()
@@ -153,7 +163,14 @@ Template("experiment.csv", row =>
             .log()
             .wait()
             .remove()
+            .callback(getTimer("timeout").stop())
+        ,
+        getTimer("timeout")
+            .wait()
     )
+    .log("list", row.LIST)
+    .log("item", row.ITEM)
+    .log("condition", row.CONDITION)
 )
 
 // Final screen
