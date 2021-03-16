@@ -8,7 +8,7 @@ Header(
 )
 
 // First show instructions, then experiment trials, send results and show end screen
-//Sequence("ethics", "participants", "instructions", "exercise", "start_experiment", "experiment", "end")
+Sequence("ethics", "participants", "instructions", "exercise", "start_experiment", randomize("experiment"), "end")
 //Sequence("start_experiment", "experiment", "end")
 
 // Ethics agreement
@@ -146,13 +146,13 @@ newTrial( "start_experiment" ,
 
 // Experimental trial
 Template("experiment.csv", row =>
-    newText("<h1>\*</h1>")
-        .center()
-        .print()
-    ,
-    newKey(" ")
-        .wait()
-    ,
+    // newText("<h1>\*</h1>")
+    //     .center()
+    //     .print()
+    // ,
+    // newKey(" ")
+    //     .wait()
+    // ,
     newTimer("timeout", 10000)
         .start()
     ,
@@ -164,9 +164,9 @@ Template("experiment.csv", row =>
             .wait()
             .remove()
             .callback(getTimer("timeout").stop())
-        ,
-        getTimer("timeout")
-            .wait()
+        // ,
+        // getTimer("timeout")
+        //     .wait()
     )
     .log("list", row.LIST)
     .log("item", row.ITEM)
