@@ -1,61 +1,61 @@
-ITEM,CONDITION,SENTENCE,LIST
-1,1,Andrea war abweisend um das Date schneller zu beenden.,1
-2,2,Anja war aggressiv um die Rivalin zu irritieren.,2
-3,1,Anna war altmodisch um den Stiefvater nicht zu verärgern.,3
-4,2,Beate war aufmerksam um die Vögel im richtigen Moment zu erwischen.,4
-5,1,Svenja war barbarisch um die Wikinger für sich zu gewinnen.,1
-6,2,Clara war bescheiden um die Stiefmutter von sich zu überzeugen.,2
-7,1,Elena war chaotisch um ihre Kreativität zu kultivieren.,3
-8,2,Yannik war charmant um seine Mutter von sich abzulenken.,4
-9,1,Elisa war defensiv um die Anwälte aus dem Konzept zu bringen.,1
-10,2,Hannah war eigenwillig um die Erzieher damit zu ärgern.,2
-11,1,Helena war energisch um das Laufen hinter sich zu bringen.,3
-12,2,Helga war engagiert um die Arbeit schnell zu erledigen.,4
-13,1,Jana war erwachsen um Wodka für die Party zu kaufen.,1
-14,2,Sophie war freundlich um die Eltern stolz auf sie zu machen.,2
-15,1,Jasmin war fröhlich um ihre Laune zu verbessern.,3
-16,2,Julia war gehorsam um die Großeltern wieder zu beruhigen.,4
-17,1,Katja war gerissen um dem Detektiv ein Schnippchen zu schlagen.,1
-18,2,Laura war gierig um die Schätze sich zu schnappen.,2
-19,1,Leonie war gutgläubig um ihre Naivität als Alibi zu nutzen.,3
-20,2,Linda war gutherzig um die Hexe zu täuschen.,4
-21,1,Lisa war hartherzig um die Scheidung zu erschweren.,1
-22,2,Marie war hartnäckig um Kompromisse zu vermeiden.,2
-23,1,Miriam war hemmungslos um ihre Fantasien in Gänze auszuleben.,3
-24,2,Nadine war humorvoll um die Atmosphäre zu entspannen.,4
-25,1,Sabine war ignorant um ihren Mann absichtlich zu verärgern.,1
-26,2,Sandra war impulsiv um ihre Lehrer auf die Palme zu treiben.,2
-27,1,Saskia war kindisch um ihren Vater zu verärgern.,3
-28,2,Petra war kritisch um die Azubis herauszufordern.,4
-29,1,Verena war liberal um den Studenten viel Freiheit einzuräumen.,1
-30,2,Adam war liebevoll um die Kinder zu beruhigen.,2
-31,1,Alex war lustig um die Clowns von sich zu überzeugen.,3
-32,2,Armin war männlich um die Freundin zu beeindrucken.,4
-33,1,Daniel war nachlässig um die Arbeit auf andere abzuwälzen.,1
-34,2,Dennis war natürlich um seine Persönlichkeit zu zeigen.,2
-35,1,Janina war nervös um der Jury Angst vorzuspielen.,3
-36,2,Fritz war neugierig um das Geheimnis zu enthüllen.,4
-37,1,Heiko war passiv um seine Frau nicht aufzubringen.,1
-38,2,Holger war pragmatisch um seine Ziele schneller zu erreichen.,2
-39,1,Jakob war reserviert um seine Gefühle besser zu verbergen.,3
-40,2,Thomas war ritterlich um seine Treue der Gräfin zu zeigen.,4
-41,1,Jannik war selbstlos um die Kameraden für sich zu gewinnen.,1
-42,2,Jonas war sexistisch um die Frau einzuschüchtern.,2
-43,1,Karl war skeptisch um die Theorie in Frage zu stellen.,3
-44,2,Kilian war skrupellos um die Konkurrenz konsequent auszuschalten.,4
-45,1,Klaus war taktvoll um Rücksicht auf andere zu nehmen.,1
-46,2,Lorenz war todernst um die Geschäftslage klar darzustellen.,2
-47,1,Nils war tolerant um den Touristen eine weitere Chance zu geben.,3
-48,2,Lukas war überrascht um seine Freunde nicht zu enttäuschen.,4
-49,1,Manuel war unruhig um die Verdächtigen hinters Licht zu führen.,1
-50,2,Marc war unschuldig um die Agenten in Sicherheit zu wiegen.,2
-51,1,Martin war verärgert um seine Unzufriedenheit zu zeigen.,3
-52,2,Ludwig war verrückt um die Ärzte zu erschrecken.,4
-53,1,Oliver war vorsichtig um die Fallen zu vermeiden.,1
-54,2,Pascal war wahnsinnig um die Medikamente zu bekommen.,2
-55,1,Sonja war weiblich um ihre Figur zu betonen.,3
-56,2,Tobias war wohlwollend um die Lehrlinge besser zu betreuen.,4
-57,1,Robin war zielbewusst um das Studium schnell abzuschließen.,1
-58,2,Peter war zielstrebig um die Ausbildung erfolgreich zu beenden.,2
-59,1,Simon war zufrieden um die Kunden von dem Deal zu überzeugen.,3
-60,2,Stefan war zynisch um die Debatte aufzuheizen.,4
+ITEM,CONDITION,SENTENCE,QUESTION,CORRECT ANSWER,WRONG ANSWER,LIST
+1,1,"Andrea war abweisend, um das Date schneller zu beenden.",0,,,1
+2,2,"Anja war aggressiv, um die Rivalin zu irritieren.",1,"Die Rivalin","Die Mutter",2
+3,1,"Anna war altmodisch, um den Stiefvater nicht zu verärgern.",1,"Der Stiefvater","Der Onkel",3
+4,2,"Beate war aufmerksam, um die Vögel im richtigen Moment zu erwischen.",1,"Eine Frau","Ein Mann",4
+5,1,"Svenja war barbarisch, um die Wikinger für sich zu gewinnen.",1,"Die Wikinger","Die Lehrer",1
+6,2,"Clara war bescheiden, um die Stiefmutter von sich zu überzeugen.",1,"Ein Mann","Eine Frau",2
+7,1,"Elena war chaotisch, um ihre Kreativität zu kultivieren.",1,"Eine Frau","Ein Mann",3
+8,2,"Yannik war charmant, um seine Mutter von sich abzulenken.",1,"Die Mutter","Die Großmutter",4
+9,1,"Elisa war defensiv, um die Anwälte aus dem Konzept zu bringen.",1,"Die Anwälte","Die Polizisten",1
+10,2,"Hannah war eigenwillig, um die Erzieher damit zu ärgern.",0,,,2
+11,1,"Helena war energisch, um das Laufen hinter sich zu bringen.",0,,,3
+12,2,"Helga war engagiert, um die Arbeit schnell zu erledigen.",0,,,4
+13,1,"Jana war erwachsen, um Wodka für die Party zu kaufen.",0,,,1
+14,2,"Sophie war freundlich, um die Eltern stolz auf sie zu machen.",1,"Die Eltern","Die Geschwister",2
+15,1,"Jasmin war fröhlich, um ihre Laune zu verbessern.",0,,,3
+16,2,"Julia war gehorsam, um die Großeltern wieder zu beruhigen.",0,,,4
+17,1,"Katja war gerissen, um dem Detektiv ein Schnippchen zu schlagen.",1,"Ein Detektiv","Ein Richter",1
+18,2,"Laura war gierig, um die Schätze sich zu schnappen.",1,"Eine Frau","Ein Mann",2
+19,1,"Leonie war gutgläubig, um ihre Naivität als Alibi zu nutzen.",0,,,3
+20,2,"Linda war gutherzig, um die Hexe zu täuschen.",1,"Die Hexe","Der Zauberer",4
+21,1,"Lisa war hartherzig, um die Scheidung zu erschweren.",1,"Eine Frau","Ein Mann",1
+22,2,"Marie war hartnäckig, um Kompromisse zu vermeiden.",0,,,2
+23,1,"Miriam war hemmungslos, um ihre Fantasien in Gänze auszuleben.",1,"Eine Frau","Ein Mann",3
+24,2,"Nadine war humorvoll, um die Atmosphäre zu entspannen.",0,,,4
+25,1,"Sabine war ignorant, um ihren Mann absichtlich zu verärgern.",0,,,1
+26,2,"Sandra war impulsiv, um ihre Lehrer auf die Palme zu treiben.",1,"Die Lehrer","Die Eltern",2
+27,1,"Saskia war kindisch, um ihren Vater zu verärgern.",1,"Der Vater","Der Großvater",3
+28,2,"Petra war kritisch, um die Azubis herauszufordern.",1,"Ein Azubi","Ein Affe",4
+29,1,"Verena war liberal, um den Studenten viel Freiheit einzuräumen.",1,"Eine Frau","Ein Mann",1
+30,2,"Adam war liebevoll, um die Kinder zu beruhigen.",1,"Ein Mann","Eine Frau",2
+31,1,"Alex war lustig, um die Clowns von sich zu überzeugen.",1,"Ein Clown","Ein Computer",3
+32,2,"Armin war männlich, um die Freundin zu beeindrucken.",1,"Ein Mann","Ein Vogel",4
+33,1,"Daniel war nachlässig, um die Arbeit auf andere abzuwälzen.",0,,,1
+34,2,"Dennis war natürlich, um seine Persönlichkeit zu zeigen.",1,"Ein Mann","Eine Frau",2
+35,1,"Janina war nervös, um der Jury Angst vorzuspielen.",1,"Die Jury","Die Anwälte",3
+36,2,"Fritz war neugierig, um das Geheimnis zu enthüllen.",0,,,4
+37,1,"Heiko war passiv, um seine Frau nicht aufzubringen.",0,,,1
+38,2,"Holger war pragmatisch, um seine Ziele schneller zu erreichen.",1,"Ein Mann","Eine Frau",2
+39,1,"Jakob war reserviert, um seine Gefühle besser zu verbergen.",1,"Die Gefühle","Der Notfall",3
+40,2,"Thomas war ritterlich, um seine Treue der Gräfin zu zeigen.",0,,,4
+41,1,"Jannik war selbstlos, um die Kameraden für sich zu gewinnen.",0,,,1
+42,2,"Jonas war sexistisch, um die Frau einzuschüchtern.",1,"Ein Mann","Ein Hund",2
+43,1,"Karl war skeptisch, um die Theorie in Frage zu stellen.",0,,,3
+44,2,"Kilian war skrupellos, um die Konkurrenz konsequent auszuschalten.",0,,,4
+45,1,"Klaus war taktvoll, um Rücksicht auf andere zu nehmen.",1,"Ein Mann","Eine Frau",1
+46,2,"Lorenz war todernst, um die Geschäftslage klar darzustellen.",0,,,2
+47,1,"Nils war tolerant, um den Touristen eine weitere Chance zu geben.",1,"Ein Mann","Eine Frau",3
+48,2,"Lukas war überrascht, um seine Freunde nicht zu enttäuschen.",0,,,4
+49,1,"Manuel war unruhig, um die Verdächtigen hinters Licht zu führen.",0,,,1
+50,2,"Marc war unschuldig, um die Agenten in Sicherheit zu wiegen.",1,"Die Agenten","Die Politiker",2
+51,1,"Martin war verärgert, um seine Unzufriedenheit zu zeigen.",0,,,3
+52,2,"Ludwig war verrückt, um die Ärzte zu erschrecken.",1,"Die Ärzte","Die Techniker",4
+53,1,"Oliver war vorsichtig, um die Fallen zu vermeiden.",1,"Ein Mann","Eine Frau",1
+54,2,"Pascal war wahnsinnig, um die Medikamente zu bekommen.",0,,,2
+55,1,"Sonja war weiblich, um ihre Figur zu betonen.",0,,,3
+56,2,"Tobias war wohlwollend, um die Lehrlinge besser zu betreuen.",1,"Ein Mann","Eine Frau",4
+57,1,"Robin war zielbewusst, um das Studium schnell abzuschließen.",0,,,1
+58,2,"Peter war zielstrebig, um die Ausbildung erfolgreich zu beenden.",0,,,2
+59,1,"Simon war zufrieden, um die Kunden von dem Deal zu überzeugen.",1,"Die Kunden","Die Verkäufer",3
+60,2,"Stefan war zynisch, um die Debatte aufzuheizen.",1,"Ein Mann","Eine Frau",4

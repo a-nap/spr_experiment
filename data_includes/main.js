@@ -8,8 +8,8 @@ Header(
 )
 
 // First show instructions, then experiment trials, send results and show end screen
-Sequence("ethics", "participants", "instructions", "exercise", "start_experiment", randomize("experiment"), "end")
-//Sequence("start_experiment", "experiment", "end")
+//Sequence("ethics", "participants", "instructions", "exercise", "start_experiment", randomize("experiment"), "end")
+Sequence("experiment", "end")
 
 // Ethics agreement
 newTrial("ethics",
@@ -38,7 +38,7 @@ newTrial("participants",
     defaultText
         .print()
     ,
-    newText("<div class='fancy'><h2>Zur Auswertung der Ergebnisse benötigen wir folgende Informationen.<br>Sie werden streng anonym behandelt.</h2></div>")
+    newText("<div class='fancy'><h2>1Zur Auswertung der Ergebnisse benötigen wir folgende Informationen.<br>Sie werden streng anonym behandelt.</h2></div>")
     ,
     newText("participantID", "<b>Bitte tragen Sie Ihre Teilnehmer-ID ein. (bitte Eintrag durch Eingabetaste bestätigen)</b>")
     ,
@@ -146,16 +146,6 @@ newTrial( "start_experiment" ,
 
 // Experimental trial
 Template("experiment.csv", row =>
-    // newText("<h1>\*</h1>")
-    //     .center()
-    //     .print()
-    // ,
-    // newKey(" ")
-    //     .wait()
-    // ,
-    // newTimer("timeout", 10000)
-    //     .start()
-    // ,
     newTrial( "experiment",
         newController("DashedSentence", {s : row.SENTENCE})
             .center()
@@ -163,10 +153,28 @@ Template("experiment.csv", row =>
             .log()
             .wait()
             .remove()
-            // .callback(getTimer("timeout").stop())
-        // ,
-        // getTimer("timeout")
-        //     .wait()
+        ,
+    ( row.QUESTION=="1" ? [
+       newText( "answer1" , row.CORRECT ),
+       newText( "answer2" , row.WRONG ),
+       newCanvas("Canvas", 600, 100)
+                .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
+                .add(   0 , 50 , newText("1 =") )
+                .add( 250 , 50 , newText("2 =") )
+                .add(  50 , 50 , getText("answer1") )
+                .add( 300 , 50 , getText("answer2") )
+                .center()
+                .print()
+        ,
+       newSelector("answer")
+            .add( getText("answer1") , getText("answer2") )
+            .keys("1","2")
+            .log()
+            .once()
+            .wait()
+    ] : [
+        null
+    ])
     )
     .log("list", row.LIST)
     .log("item", row.ITEM)
