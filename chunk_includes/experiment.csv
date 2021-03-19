@@ -1,4 +1,4 @@
-ITEM,CONDITION,SENTENCE,QUESTION,CORRECT ANSWER,WRONG ANSWER,LIST
+ITEM,CONDITION,SENTENCE,QUESTION,CORRECT,WRONG,LIST
 1,1,"Andrea war abweisend, um das Date schneller zu beenden.",0,,,1
 2,2,"Anja war aggressiv, um die Rivalin zu irritieren.",1,"Die Rivalin","Die Mutter",2
 3,1,"Anna war altmodisch, um den Stiefvater nicht zu verärgern.",1,"Der Stiefvater","Der Onkel",3
