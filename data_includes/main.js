@@ -113,18 +113,6 @@ newTrial("participants",
 
 // Instructions
 newTrial("instructions",
-    newText("instructions_greeting", "<h2>Willkommen zum Experiment!</h2><p>Ihre Aufgabe in dieser Studie ist es, Sätze zu lesen und sie nach ihrer Natürlichkeit zu bewerten. Die Sätze sind unabhängig voneinander. Verlassen Sie sich bei der Bewertung der Natürlichkeit einfach auf Ihre Intuition. Zur Bewertung der Sätze nutzen Sie die folgende Skala:</p>")
-        .cssContainer({"width":"900px"})
-        .left()
-        .print()
-        ,
-    newScale(7)
-        .before( newText("left", "(klingt sehr unnatürlich)") )
-        .after( newText("right", "(klingt sehr natürlich)") )
-        .keys()
-        .print()
-        .log()
-        ,
     newHtml("instructions_text", "instructions.html")
         .print()
         ,
@@ -137,16 +125,12 @@ newTrial("instructions",
 // Exercise
 Template("exercise.csv", row =>
     newTrial( "exercise" ,
-        newText("sentence", {s : row.SENTENCE})
+        newController("DashedSentence", {s : row.SENTENCE})
             .center()
             .print()
-            ,
-        newScale(7)
-            .before( newText("left", "(klingt sehr unnatürlich)") )
-            .after( newText("right", "(klingt sehr natürlich)") )
-            .keys()
-            .print()
             .log()
+            .wait()
+            .remove()
     )
 )
 
@@ -162,17 +146,27 @@ newTrial( "start_experiment" ,
 
 // Experimental trial
 Template("experiment.csv", row =>
+    // newText("<h1>\*</h1>")
+    //     .center()
+    //     .print()
+    // ,
+    // newKey(" ")
+    //     .wait()
+    // ,
+    // newTimer("timeout", 10000)
+    //     .start()
+    // ,
     newTrial( "experiment",
-        newText("sentence", {s : row.SENTENCE})
+        newController("DashedSentence", {s : row.SENTENCE})
             .center()
             .print()
-            ,
-        newScale(7)
-            .before( newText("left", "(klingt sehr unnatürlich)") )
-            .after( newText("right", "(klingt sehr natürlich)") )
-            .keys()
-            .print()
             .log()
+            .wait()
+            .remove()
+            // .callback(getTimer("timeout").stop())
+        // ,
+        // getTimer("timeout")
+        //     .wait()
     )
     .log("list", row.LIST)
     .log("item", row.ITEM)
