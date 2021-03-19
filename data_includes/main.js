@@ -38,7 +38,7 @@ newTrial("participants",
     defaultText
         .print()
     ,
-    newText("<div class='fancy'><h2>1Zur Auswertung der Ergebnisse benötigen wir folgende Informationen.<br>Sie werden streng anonym behandelt.</h2></div>")
+    newText("<div class='fancy'><h2>Zur Auswertung der Ergebnisse benötigen wir folgende Informationen.<br>Sie werden streng anonym behandelt.</h2></div>")
     ,
     newText("participantID", "<b>Bitte tragen Sie Ihre Teilnehmer-ID ein. (bitte Eintrag durch Eingabetaste bestätigen)</b>")
     ,
