@@ -1,4 +1,10 @@
-ITEM,CONDITION,SENTENCE,LIST
-1001,1001,"Time flies, like an arrow.",1
-1002,1002,"Fruit flies, like a banana.",2
-1003,1001,"Mary Mary, quite contrary how does your garden grow?",3
+ITEM,CONDITION,SENTENCE
+2001,0,"In Internetforen diskutierten Eltern."
+2002,0,"Beide Einrichtungen wurden von Freiwilligen betrieben."
+2003,0,"Die Journalisten warteten vor der Tür."
+2004,0,"Kein Kind klagte über Schmerzen."
+2005,0,"Der Trainer lief davon."
+2006,0,"Das Team wollte jedes Spiel gewinnen."
+2007,0,"Der Bundesrat schien sich zu treffen."
+2008,0,"Der Radfahrer kippte zur Seite."
+2009,0,"Der Schwerpunkt änderte sich."

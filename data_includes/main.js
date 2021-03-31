@@ -1,123 +1,176 @@
 PennController.ResetPrefix(null); // Shorten command names (keep this line here))
 
 // DebugOff()   // Uncomment this line only when you are 100% done designing your experiment
-// This is run at the beginning of each trial
+const voucher = b64_md5((Date.now() + Math.random()).toString()) // Voucher code generator
+
 Header(
-    // Declare a global Var element "ID" in which we will store the participant's ID
-    newVar("ID").global()
+    // Declare global variables to store the participant's ID and demographic information
+    newVar("ID").global(),
+    newVar("GERMAN").global(),
+    newVar("LAND").global(),
+    newVar("NATIVE").global(),
+    newVar("AGE").global(),
+    newVar("GENDER").global(),
+    newVar("HAND").global()
 )
+ // Add the particimant info to all trials' results lines
+.log( "id"     , getVar("ID") )
+.log( "german" , getVar("GERMAN") )
+.log( "land"   , getVar("LAND") )
+.log( "native" , getVar("NATIVE") )
+.log( "age"    , getVar("AGE") )
+.log( "gender" , getVar("GENDER") )
+.log( "hand"   , getVar("HAND") )
+.log( "code"   , voucher )
+
 
 // First show instructions, then experiment trials, send results and show end screen
-//Sequence("ethics", "participants", "instructions", "exercise", "start_experiment", randomize("experiment"), "end")
-Sequence("experiment", "end")
+// Sequence("ethics", "setcounter", "participants", "instructions", "exercise", "start_experiment", rshuffle("experiment-filler", "experiment-item"), SendResults(), "end")
+Sequence("ethics", "setcounter", "participants", "instructions", "start_experiment", "end")
 
-// Ethics agreement
+// Ethics agreement: participants must agree before continuing
 newTrial("ethics",
     newHtml("ethics_explanation", "ethics.html")
+        .cssContainer({"margin":"1em"})
         .print()
     ,
     newHtml("form", `<div class='fancy'><input name='consent' id='consent' type='checkbox'><label for='consent'>Ich bin mindestens 18 Jahre alt und erkläre mich damit einverstanden, an der Studie teilzunehmen. Ich habe die <em>Information für Probanden</em> gelesen und verstanden. Meine Teilnahme ist freiwillig. Ich weiß, dass ich die Möglichkeit habe, meine Teilnahme an dieser Studie jederzeit und ohne Angabe von Gründen abzubrechen, ohne dass mir daraus Nachteile entstehen. Ich erkläre, dass ich mir der im Rahmen der Studie erfolgten Auszeichnung von Studiendaten und ihrer Verwendung in pseudo- bzw. anonymisierter Form einverstanden bin.</label></div>`)
-        .cssContainer({"width":"900px"})
+        .cssContainer({"margin":"1em"})
         .print()
     ,
     newFunction( () => $("#consent").change( e=>{
-        if (e.target.checked) getButton("Experiment starten").enable()._runPromises();
-        else getButton("Experiment starten").disable()._runPromises();
+        if (e.target.checked) getButton("go_to_info").enable()._runPromises();
+        else getButton("go_to_info").disable()._runPromises();
     }) ).call()
     ,
-    newButton("Experiment starten")
-        .cssContainer({"margin-top":"1em"})
-        .cssContainer({"margin-bottom":"1em"})
+    newButton("go_to_info", "Experiment starten")
+        .cssContainer({"margin":"1em"})
         .disable()
         .print()
         .wait()
 )
 
-// Participant information
+// Start the next list as soon as the participant agrees to the ethics statement
+// This is different from PCIbex's normal behavior, which is to move to the next list once 
+// the experiment is completed. In my experiment, multiple participants are likely to start 
+// the experiment at the same time, leading to a disproportionate assignment of participants
+// to lists.
+SetCounter("setcounter")
+
+// Participant information: questions appear as soon as information is input
 newTrial("participants",
     defaultText
+        .cssContainer({"margin-top":"1em", "margin-bottom":"1em"})
         .print()
     ,
-    newText("<div class='fancy'><h2>1Zur Auswertung der Ergebnisse benötigen wir folgende Informationen.<br>Sie werden streng anonym behandelt.</h2></div>")
+    newText("participant_info_header", "<div class='fancy'><h2>Zur Auswertung der Ergebnisse benötigen wir folgende Informationen.</h2><p>Sie werden streng anonym behandelt und eine spätere Zuordnung zu Ihnen wird nicht möglich sein.</p></div>")
     ,
-    newText("participantID", "<b>Bitte tragen Sie Ihre Teilnehmer-ID ein. (bitte Eintrag durch Eingabetaste bestätigen)</b>")
+    // Participant ID (6-place)
+    newText("participantID", "<b>Bitte tragen Sie Ihre Teilnehmer-ID ein.</b><br>(bitte Eintrag durch Eingabetaste bestätigen)")
     ,
     newTextInput("input_ID")
-        .left()
+        .length(6)
+        .log()
         .print()
         .wait()
     ,
-    newText("<p><b>Ist Deutsch Ihre Muttersprache?</b></p>")
+    // German native speaker question
+    newText("<b>Ist Deutsch Ihre Muttersprache?</b>")
     ,
     newScale("input_german",   "ja", "nein")
         .radio()
-        .cssContainer({"width":"900px"})
-        .left()
+        .log()
         .labelsPosition("right")
         .print()
         .wait()
     ,
-    newText("<p><b>In welchem Bundesland wird Ihre Variante des Deutschen (bzw. Ihr Dialekt) hauptsächlich gesprochen?</b></p>")
+    // Federal state of origin
+    newText("<b>In welchem Bundesland wird Ihre Variante des Deutschen (bzw. Ihr Dialekt) hauptsächlich gesprochen?</b>")
     ,
     newDropDown("land", "(bitte auswählen)")
         .add("Baden-Württemberg", "Bayern", "Berlin", "Brandenburg", "Bremen", "Hamburg", "Hessen", "Mecklenburg-Vorpommern", "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfal", "Saarland", "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen", "nicht Deutschland, sondern Österreich", "nicht Deutschland, sondern Schweiz", "keines davon")
-        .cssContainer({"width":"900px"})
-        .left()
+        .log()
         .print()
         .wait()
     ,
-    newText("<p><b>Haben Sie andere Muttersprachen? (bitte Eintrag durch Eingabetaste bestätigen)</b></p>")
+    // Other native languages
+    newText("<b>Haben Sie andere Muttersprachen?</b><br>(bitte Eintrag durch Eingabetaste bestätigen)")
     ,
     newTextInput("input_native")
-        .left()
+        .log()
         .print()
         .wait()
     ,
-    newText("<p><b>Alter in Jahren (bitte Eintrag durch Eingabetaste bestätigen)</b></p>")
+    // Age
+    newText("<b>Alter in Jahren</b><br>(bitte Eintrag durch Eingabetaste bestätigen)")
     ,
     newTextInput("input_age")
-        .left()
         .length(2)
+        .log()
         .print()
         .wait()
     ,
-    newText("<p><b>Geschlecht</b></p>")
+    // Gender
+    newText("<b>Geschlecht</b>")
     ,
     newScale("input_gender",   "weiblich", "männlich", "divers")
         .radio()
-        .cssContainer({"width":"900px"})
-        .left()
+        .log()
         .labelsPosition("right")
         .print()
         .wait()
     ,
-    newText("<p><b>Händigkeit</b></p>")
+    // Handedness
+    newText("<b>Händigkeit</b>")
     ,
     newScale("input_hand",   "rechts", "links", "beide")
         .radio()
-        .cssContainer({"width":"900px"})
-        .left()
+        .log()
         .labelsPosition("right")
         .print()
         .wait()
     ,
-    newButton("weiter", "Weiter zur Instruktion")
-        .cssContainer({"padding-top":"1em"})
-        .print()
-        .wait()
+    // Clear error messages if the participant changes the input
+    newKey("just for callback", "") 
+        .callback( getText("errorage").remove() , getText("errorID").remove() )
     ,
-    newVar("ID")
-        .global()
-        .set(getTextInput("input_ID"))
+    // Formatting text for error messages
+    defaultText.color("Crimson").print()
+    ,
+    // Continue. Only validate a click when ID and age information is input properly
+    newButton("weiter", "Weiter zur Instruktion")
+        .cssContainer({"margin-top":"1em", "margin-bottom":"1em"})
+        .print()
+        // Check for participant ID and age input
+        .wait(
+             newFunction('dummy', ()=>true).test.is(true)
+            // ID
+            .and( getTextInput("input_ID").testNot.text("")
+                .failure( newText('errorID', "Bitte tragen Sie Ihre Teilnehmer-ID ein. Diese haben Sie in einer E-Mail bekommen.") )
+            // Age
+            ).and( getTextInput("input_age").test.text(/^\d+$/)
+                .failure( newText('errorage', "Bitte tragen Sie Ihr Alter ein."), 
+                          getTextInput("input_age").text("")))  
+        )
+    ,
+    // Store the texts from inputs into the Var elements
+    getVar("ID")     .set( getTextInput("input_ID") ),
+    getVar("GERMAN") .set( getScale("input_german") ),
+    getVar("LAND")   .set( getDropDown("land") ),
+    getVar("NATIVE") .set( getTextInput("input_native") ),
+    getVar("AGE")    .set( getTextInput("input_age") ),
+    getVar("GENDER") .set( getScale("input_gender") ),
+    getVar("HAND")   .set( getScale("input_hand") )
 )
 
 // Instructions
 newTrial("instructions",
     newHtml("instructions_text", "instructions.html")
+        .cssContainer({"margin":"1em"})
         .print()
         ,
     newButton("go_to_exercise", "Übung starten")
-        .cssContainer({"margin-top":"1em"})
+        .cssContainer({"margin":"1em"})
         .print()
         .wait()
 )
@@ -181,10 +234,13 @@ Template("experiment.csv", row =>
     .log("condition", row.CONDITION)
 )
 
-// Final screen
+// Final screen: explanation of the goal
 newTrial("end",
+    newText("<div class='fancy'><h2>Vielen Dank für die Teilnahme an unserer Studie!</h2></div><p>Um Ihre Vergütung zu bekommen, schicken Sie bitte diesen persönlichen Code an die Versuchsleiterin: <div class='fancy'><em>".concat(voucher, "</em></div></p>"))
+        .cssContainer({"margin-top":"1em", "margin-bottom":"1em"})
+        .print()
+    ,
     newHtml("explain", "end.html")
-        .cssContainer({"width":"900px"})
         .print()
     ,
     // Trick: stay on this trial forever (until tab is closed)
