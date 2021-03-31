@@ -70,3 +70,8 @@ span.retry:hover {
 span.retry:visited {
     color:  OldLace;
 }
+
+
+.PennController-Scale .option {
+    margin: 0em 0.5em;
+}

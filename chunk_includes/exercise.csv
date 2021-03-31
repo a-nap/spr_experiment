@@ -1,10 +1,10 @@
-ITEM,CONDITION,SENTENCE
-2001,0,"In Internetforen diskutierten Eltern."
-2002,0,"Beide Einrichtungen wurden von Freiwilligen betrieben."
-2003,0,"Die Journalisten warteten vor der Tür."
-2004,0,"Kein Kind klagte über Schmerzen."
-2005,0,"Der Trainer lief davon."
-2006,0,"Das Team wollte jedes Spiel gewinnen."
-2007,0,"Der Bundesrat schien sich zu treffen."
-2008,0,"Der Radfahrer kippte zur Seite."
-2009,0,"Der Schwerpunkt änderte sich."
+ITEM,CONDITION,SENTENCE,QUESTION,CORRECT,WRONG
+2001,0,"In Internetforen diskutierten Eltern.",1,"Die Eltern","Die Tanten"
+2002,0,"Beide Einrichtungen wurden von Freiwilligen betrieben.",0,,
+2003,0,"Die Journalisten warteten vor der Tür.",1,"Die Journalisten","Die Katzen"
+2004,0,"Kein Kind klagte über Schmerzen.",0,,
+2005,0,"Der Trainer lief davon.",1,"Der Trainer","Der Sprinter"
+2006,0,"Das Team wollte jedes Spiel gewinnen.",0,,
+2007,0,"Der Bundesrat schien sich zu treffen.",0,,
+2008,0,"Der Radfahrer kippte zur Seite.",1,"Der Radfahrer","Das Kind"
+2009,0,"Der Schwerpunkt änderte sich.",1,"Der Schwerpunkt","Die Schwerkraft"

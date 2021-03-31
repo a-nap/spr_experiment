@@ -11,7 +11,8 @@ Header(
     newVar("NATIVE").global(),
     newVar("AGE").global(),
     newVar("GENDER").global(),
-    newVar("HAND").global()
+    newVar("HAND").global(),
+    newVar("ACCURACY", []).global() 
 )
  // Add the particimant info to all trials' results lines
 .log( "id"     , getVar("ID") )
@@ -25,8 +26,7 @@ Header(
 
 
 // First show instructions, then experiment trials, send results and show end screen
-// Sequence("ethics", "setcounter", "participants", "instructions", "exercise", "start_experiment", rshuffle("experiment-filler", "experiment-item"), SendResults(), "end")
-Sequence("ethics", "setcounter", "participants", "instructions", "start_experiment", "end")
+Sequence("ethics", "setcounter", "participants", "instructions", randomize("exercise"), "start_experiment", randomize("experiment"), SendResults(), "end")
 
 // Ethics agreement: participants must agree before continuing
 newTrial("ethics",
@@ -184,12 +184,56 @@ Template("exercise.csv", row =>
             .log()
             .wait()
             .remove()
+        ,
+    ( row.QUESTION=="1" ? [
+        newText( "answer_correct" , row.CORRECT ),
+        newText( "answer_wrong" , row.WRONG ),
+
+       newCanvas("Canvas", 600, 100)
+          .center()
+                .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
+                .add(   0 , 50 , newText("1 =") )
+                .add( 300 , 50 , newText("2 =") )
+                .add(  40 , 50 , getText("answer_correct") )
+                .add( 340 , 50 , getText("answer_wrong") )
+                .print()
+        ,
+       newSelector("answer")
+            .add( getText("answer_correct") , getText("answer_wrong") )
+            .shuffle()
+            .keys("1","2")
+            .log()
+            .print()
+            .once()
+            .wait()
+            .test.selected( "answer_correct" )
+            .success(
+                newText("Richtig!")
+                    .color("LightGreen")
+                    .center()
+                    .print())
+            .failure( 
+                newText("Leider falsch!")
+                    .color("Crimson")
+                    .center()
+                    .print())
+            ,
+
+       // Wait briefly to display which option was selected
+        newTimer("wait", 1000)
+            .start()
+            .wait()
+    ] : [
+        null
+    ])
     )
+    .log("item", row.ITEM)
+    .log("condition", row.CONDITION)
 )
 
 // Start experiment
 newTrial( "start_experiment" ,
-    newText("<h2>Jetzt beginnt der Hauptteil der Studie.</h2>")
+    newText("<h2>Jetzt beginnt der Hauptteil der Studie.</h2><p>Ab jetzt kriegen Sie Feedback nur bei falscher Antwort.</p>")
         .print()
     ,
     newButton("go_to_experiment", "Experiment starten")
@@ -208,22 +252,46 @@ Template("experiment.csv", row =>
             .remove()
         ,
     ( row.QUESTION=="1" ? [
-       newText( "answer1" , row.CORRECT ),
-       newText( "answer2" , row.WRONG ),
+        newText( "answer_correct" , row.CORRECT ),
+        newText( "answer_wrong" , row.WRONG ),
+        newVar( "computedAccuracy")
+            .set(getVar("ACCURACY"))
+            .set(v=>v.filter(a=>a===true).length/v.length)
+            ,
        newCanvas("Canvas", 600, 100)
+          .center()
                 .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
                 .add(   0 , 50 , newText("1 =") )
-                .add( 250 , 50 , newText("2 =") )
-                .add(  50 , 50 , getText("answer1") )
-                .add( 300 , 50 , getText("answer2") )
-                .center()
+                .add( 300 , 50 , newText("2 =") )
+                .add(  40 , 50 , getText("answer_correct") )
+                .add( 340 , 50 , getText("answer_wrong") )
                 .print()
         ,
        newSelector("answer")
-            .add( getText("answer1") , getText("answer2") )
+            .add( getText("answer_correct") , getText("answer_wrong") )
+            .shuffle()
             .keys("1","2")
             .log()
+            .print()
             .once()
+            .wait()
+            .test.selected( "answer_correct" )
+            .success( getVar("ACCURACY").set(v=>[...v,true]) )
+            .failure( 
+                getVar("ACCURACY").set(v=>[...v,false]),
+                newText("Leider falsch!")
+                    .color("Crimson")
+                    .center()
+                    .print()
+                ,
+                newTimer("wait", 1000)
+                    .start()
+                    .wait() )
+            ,
+
+       // Wait briefly to display which option was selected
+        newTimer("wait", 300)
+            .start()
             .wait()
     ] : [
         null
@@ -238,6 +306,14 @@ Template("experiment.csv", row =>
 newTrial("end",
     newText("<div class='fancy'><h2>Vielen Dank für die Teilnahme an unserer Studie!</h2></div><p>Um Ihre Vergütung zu bekommen, schicken Sie bitte diesen persönlichen Code an die Versuchsleiterin: <div class='fancy'><em>".concat(voucher, "</em></div></p>"))
         .cssContainer({"margin-top":"1em", "margin-bottom":"1em"})
+        .print()
+    ,
+
+    newVar("computedAccuracy").set(getVar("ACCURACY")).set(v=>Math.round(v.filter(a=>a===true).length/v.length*100)),
+    newText("accuracy").text(getVar("computedAccuracy"))
+    ,
+    newText("So viel Prozent der Fragen haben Sie richtig beantwortet: ")
+        .after(getText("accuracy"))
         .print()
     ,
     newHtml("explain", "end.html")
