@@ -1,6 +1,7 @@
 PennController.ResetPrefix(null); // Shorten command names (keep this line here))
 
 // DebugOff()   // Uncomment this line only when you are 100% done designing your experiment
+
 const voucher = b64_md5((Date.now() + Math.random()).toString()) // Voucher code generator
 
 Header(
@@ -24,8 +25,7 @@ Header(
 .log( "hand"   , getVar("HAND") )
 .log( "code"   , voucher )
 
-
-// First show instructions, then experiment trials, send results and show end screen
+// Sequence of events: consent to ethics statement required to start the experiment, participant information, instructions, exercise, transition screen, main experiment, result logging, and end screen.
 Sequence("ethics", "setcounter", "participants", "instructions", randomize("exercise"), "start_experiment", rshuffle("experiment-filler", "experiment-item"), SendResults(), "end")
 
 // Ethics agreement: participants must agree before continuing
@@ -208,12 +208,12 @@ Template("exercise.csv", row =>
             .wait()
             .test.selected( "answer_correct" )
             .success(
-                newText("Richtig!")
+                newText("<b>Richtig!</b>")
                     .color("LightGreen")
                     .center()
                     .print())
             .failure( 
-                newText("Leider falsch!")
+                newText("<b>Leider falsch!</b>")
                     .color("Crimson")
                     .center()
                     .print())
@@ -279,7 +279,7 @@ Template("experiment.csv", row =>
             .success( getVar("ACCURACY").set(v=>[...v,true]) )
             .failure( 
                 getVar("ACCURACY").set(v=>[...v,false]),
-                newText("Leider falsch!")
+                newText("<b>Leider falsch!</b>")
                     .color("Crimson")
                     .center()
                     .print()
