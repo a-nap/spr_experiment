@@ -177,7 +177,8 @@ newTrial("instructions",
 
 // Exercise
 Template("exercise.csv", row =>
-    newTrial( "exercise" ,
+    newTrial("exercise",
+        // Dashed sentence
         newController("DashedSentence", {s : row.SENTENCE})
             .center()
             .print()
@@ -185,6 +186,7 @@ Template("exercise.csv", row =>
             .wait()
             .remove()
         ,
+    // Optional question display
     ( row.QUESTION=="1" ? [
         newText( "answer_correct" , row.CORRECT ),
         newText( "answer_wrong" , row.WRONG ),
@@ -198,6 +200,7 @@ Template("exercise.csv", row =>
                 .add( 340 , 50 , getText("answer_wrong") )
                 .print()
         ,
+       // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
        newSelector("answer")
             .add( getText("answer_correct") , getText("answer_wrong") )
             .shuffle()
@@ -219,7 +222,7 @@ Template("exercise.csv", row =>
                     .print())
             ,
 
-       // Wait briefly to display which option was selected
+       // Wait for feedback and to display which option was selected
         newTimer("wait", 1000)
             .start()
             .wait()
@@ -227,13 +230,13 @@ Template("exercise.csv", row =>
         null
     ])
     )
-    .log("item", row.ITEM)
-    .log("condition", row.CONDITION)
+    .log( "item"      , row.ITEM)
+    .log( "condition" , row.CONDITION)
 )
 
 // Start experiment
 newTrial( "start_experiment" ,
-    newText("<h2>Jetzt beginnt der Hauptteil der Studie.</h2><p>Ab jetzt kriegen Sie Feedback nur bei falscher Antwort.</p>")
+    newText("<h2>Jetzt beginnt der Hauptteil der Studie.</h2><p>Sie kriegen Feedback nur bei falscher Antwort.</p>")
         .print()
     ,
     newButton("go_to_experiment", "Experiment starten")
@@ -243,7 +246,8 @@ newTrial( "start_experiment" ,
 
 // Experimental trial
 Template("experiment.csv", row =>
-    newTrial( "experiment",
+    newTrial( "experiment-"+row.TYPE,
+        // Dashed sentence
         newController("DashedSentence", {s : row.SENTENCE})
             .center()
             .print()
@@ -251,6 +255,7 @@ Template("experiment.csv", row =>
             .wait()
             .remove()
         ,
+    // Optional question display
     ( row.QUESTION=="1" ? [
         newText( "answer_correct" , row.CORRECT ),
         newText( "answer_wrong" , row.WRONG ),
@@ -267,6 +272,7 @@ Template("experiment.csv", row =>
                 .add( 340 , 50 , getText("answer_wrong") )
                 .print()
         ,
+       // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
        newSelector("answer")
             .add( getText("answer_correct") , getText("answer_wrong") )
             .shuffle()
@@ -284,6 +290,7 @@ Template("experiment.csv", row =>
                     .center()
                     .print()
                 ,
+                // Penalty for the wrong answer is waiting 1000 ms before continuing
                 newTimer("wait", 1000)
                     .start()
                     .wait() )
@@ -297,9 +304,9 @@ Template("experiment.csv", row =>
         null
     ])
     )
-    .log("list", row.LIST)
-    .log("item", row.ITEM)
-    .log("condition", row.CONDITION)
+    .log( "list"      , row.LIST)
+    .log( "item"      , row.ITEM)
+    .log( "condition" , row.CONDITION)
 )
 
 // Final screen: explanation of the goal
