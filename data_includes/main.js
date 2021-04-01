@@ -26,7 +26,7 @@ Header(
 
 
 // First show instructions, then experiment trials, send results and show end screen
-Sequence("ethics", "setcounter", "participants", "instructions", randomize("exercise"), "start_experiment", randomize("experiment"), SendResults(), "end")
+Sequence("ethics", "setcounter", "participants", "instructions", randomize("exercise"), "start_experiment", rshuffle("experiment-filler", "experiment-item"), SendResults(), "end")
 
 // Ethics agreement: participants must agree before continuing
 newTrial("ethics",
