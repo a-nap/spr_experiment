@@ -21,15 +21,9 @@ define_ibex_controller({
         assert_is_arraylike(this.options.s, "Bad value for 's' option of DashedSentence.");
         this.words = this.options.s;
       }
-      this.display = dget(this.options, "display", "dashed");
       this.blankText = dget(this.options,"blankText", "\u2014\u2014");// Replace with mdash
-      this.wordTime = dget(this.options, "wordTime", this.display == "in place" ? 400 : 300); // Only for speeded accpetability.
-      this.wordPauseTime = dget(this.options, "wordPauseTime", this.display == "in place" ? 0 : 100); // Ditto.
       this.showAhead = dget(this.options, "showAhead", true);
       this.showBehind = dget(this.options, "showBehind", true);
-      assert(this.display == "dashed" || this.display == "in place",
-             "Value of 'display' option for DashedSentence controller must be either " +
-             "'dashed' (default) or 'in place'.");
 
       this.currentWord = 0;
 
@@ -218,7 +212,7 @@ define_ibex_controller({
           ["Word number", i+1],
           ["Word", csv_url_encode(nonSpaceWords[i])],
           ["Reading time", this.sprResults[i][0] - this.sprResults[i][1]],
-          ["Newline?", (! this.display == "in place") &&
+          ["Newline?",
            boolToInt(((i+1) < this.wordOSpans.length) &&
                      (this.wordOSpans[i].offset().top != this.wordOSpans[i+1].offset().top))],
           ["Sentence (or sentence MD5)", this.sentenceDesc]
