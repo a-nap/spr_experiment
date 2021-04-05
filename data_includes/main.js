@@ -59,6 +59,17 @@ const askTrialQuestion = askQuestion(
   300
 );
 
+// display a primer that can be clicked away by pressing space bar
+const newPrimer = () => [
+  newText('primer','*')
+    .css("font-size", "30pt")
+    .css("margin-top", "8px")
+    .center()
+    .print(),
+  newKey(" ").wait(),
+  getText('primer').remove(),
+];
+
 Header(
     // Declare global variables to store the participant's ID and demographic information
     newVar("ID").global(),
@@ -260,17 +271,7 @@ newTrial( "start_experiment" ,
 // Experimental trial
 Template("experiment.csv", row =>
     newTrial( "experiment-"+row.TYPE,
-
-              // add a primer
-              newText('primer','*')
-              .css("font-size", "30pt")
-              .css("margin-top", "8px")
-              .center()
-              .print(),
-
-              newKey(" ").wait(),
-
-              getText('primer').remove(),
+              newPrimer(),
            // Dashed sentence
            newController("DashedSentence", {s : row.SENTENCE})
            .center()
