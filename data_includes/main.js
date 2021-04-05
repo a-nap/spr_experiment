@@ -262,7 +262,7 @@ Template("experiment.csv", row =>
     newTrial( "experiment-"+row.TYPE,
               newText('primer','*').center().print(),
               newKey(" ").wait(),
-              getText('primer').hidden(),
+              getText('primer').remove(),
            // Dashed sentence
            newController("DashedSentence", {s : row.SENTENCE})
            .center()
