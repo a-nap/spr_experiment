@@ -260,8 +260,16 @@ newTrial( "start_experiment" ,
 // Experimental trial
 Template("experiment.csv", row =>
     newTrial( "experiment-"+row.TYPE,
-              newText('primer','*').center().print(),
+
+              // add a primer
+              newText('primer','*')
+              .css("font-size", "30pt")
+              .css("margin-top", "8px")
+              .center()
+              .print(),
+
               newKey(" ").wait(),
+
               getText('primer').remove(),
            // Dashed sentence
            newController("DashedSentence", {s : row.SENTENCE})
