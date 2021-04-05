@@ -94,7 +94,7 @@ Header(
 // Sequence of events: consent to ethics statement required to start the experiment, participant information, instructions, exercise, transition screen, main experiment, result logging, and end screen.
 // Sequence("ethics", "setcounter", "participants", "instructions", randomize("exercise"), "start_experiment", rshuffle("experiment-filler", "experiment-item"), SendResults(), "end")
 // Temporary, for testing
-Sequence(rshuffle("experiment-filler", "experiment-item"))
+Sequence(randomize("exercise"));
 
 // Ethics agreement: participants must agree before continuing
 newTrial("ethics",
@@ -246,6 +246,7 @@ newTrial("instructions",
 // Exercise
 Template("exercise.csv", row =>
   newTrial("exercise",
+           newPrimer(),
            // Dashed sentence
            newController("SelfPacedReadingParadigmSentence", {s : row.SENTENCE, splitRegex: /\*/})
            .center()
