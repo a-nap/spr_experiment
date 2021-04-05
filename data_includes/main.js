@@ -4,8 +4,36 @@ PennController.ResetPrefix(null); // Shorten command names (keep this line here)
 
 const voucher = b64_md5((Date.now() + Math.random()).toString()) // Voucher code generator
 
-// Optionally inject a question into a trial
-const askQuestion = (row) => (row.QUESTION=="1" ? [
+const askExerciseQuestion = askQuestion(
+  () => newText("<b>Richtig!</b>")
+    .color("LightGreen")
+    .center()
+    .print(),
+  () => newText("<b>Leider falsch!</b>")
+    .color("Crimson")
+    .center()
+    .print(),
+  1000
+);
+
+const askTrialQuestion = askQuestion(
+  () => getVar("ACCURACY").set(v=>[...v,true]),
+  () => [
+    getVar("ACCURACY").set(v=>[...v,false]),
+    newText("<b>Leider falsch!</b>")
+      .color("Crimson")
+      .center()
+      .print(),
+    // Penalty for the wrong answer is waiting 1000 ms before continuing
+    newTimer("wait", 1000)
+      .start()
+      .wait()
+  ],
+  300
+);
+
+// Optionally Inject a question into a trial
+const askQuestion = (successCallback, failureCallback, waitTime) => (row) => (row.QUESTION=="1" ? [
   newText( "answer_correct" , row.CORRECT ),
   newText( "answer_wrong" , row.WRONG ),
 
@@ -28,20 +56,12 @@ const askQuestion = (row) => (row.QUESTION=="1" ? [
     .once()
     .wait()
     .test.selected( "answer_correct" )
-    .success(
-      newText("<b>Richtig!</b>")
-        .color("LightGreen")
-        .center()
-        .print())
-    .failure(
-      newText("<b>Leider falsch!</b>")
-        .color("Crimson")
-        .center()
-        .print())
+    .success(successCallback())
+    .failure(failureCallback())
   ,
 
   // Wait for feedback and to display which option was selected
-  newTimer("wait", 1000)
+  newTimer("wait", waitTime)
     .start()
     .wait()
 ] : []);
@@ -219,17 +239,15 @@ newTrial("instructions",
 
 // Exercise
 Template("exercise.csv", row =>
-    newTrial("exercise",
-        // Dashed sentence
-        newController("DashedSentence", {s : row.SENTENCE})
-            .center()
-            .print()
-            .log()
-            .wait()
-            .remove()
-        ,
-             askQuestion(row)
-    )
+  newTrial("exercise",
+           // Dashed sentence
+           newController("DashedSentence", {s : row.SENTENCE})
+           .center()
+           .print()
+           .log()
+           .wait()
+           .remove(),
+           askExerciseQuestion(row))
     .log( "item"      , row.ITEM)
     .log( "condition" , row.CONDITION)
 )
@@ -246,17 +264,15 @@ newTrial( "start_experiment" ,
 
 // Experimental trial
 Template("experiment.csv", row =>
-    newTrial( "experiment-"+row.TYPE,
-        // Dashed sentence
-        newController("DashedSentence", {s : row.SENTENCE})
-            .center()
-            .print()
-            .log()
-            .wait()
-            .remove()
-        ,
-              askQuestion(row)
-    )
+  newTrial("experiment-"+row.TYPE,
+           // Dashed sentence
+           newController("DashedSentence", {s : row.SENTENCE})
+           .center()
+           .print()
+           .log()
+           .wait()
+           .remove(),
+           askTrialQuestion(row))
     .log( "list"      , row.LIST)
     .log( "item"      , row.ITEM)
     .log( "condition" , row.CONDITION)
