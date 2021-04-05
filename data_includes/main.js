@@ -259,8 +259,8 @@ newTrial( "start_experiment" ,
 
 // Experimental trial
 Template("experiment.csv", row =>
-  newTrial("experiment-"+row.TYPE,
-              newText('*').print(),
+    newTrial( "experiment-"+row.TYPE,
+              newText('*').center().print(),
               newKey(" ").wait(),
            // Dashed sentence
            newController("DashedSentence", {s : row.SENTENCE})
