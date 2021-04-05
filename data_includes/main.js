@@ -175,6 +175,47 @@ newTrial("instructions",
         .wait()
 )
 
+const askQuestion = (row) => (row.QUESTION=="1" ? [
+  newText( "answer_correct" , row.CORRECT ),
+  newText( "answer_wrong" , row.WRONG ),
+
+  newCanvas("Canvas", 600, 100)
+    .center()
+    .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
+    .add(   0 , 50 , newText("1 =") )
+    .add( 300 , 50 , newText("2 =") )
+    .add(  40 , 50 , getText("answer_correct") )
+    .add( 340 , 50 , getText("answer_wrong") )
+    .print()
+  ,
+  // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
+  newSelector("answer")
+    .add( getText("answer_correct") , getText("answer_wrong") )
+    .shuffle()
+    .keys("1","2")
+    .log()
+    .print()
+    .once()
+    .wait()
+    .test.selected( "answer_correct" )
+    .success(
+      newText("<b>Richtig!</b>")
+        .color("LightGreen")
+        .center()
+        .print())
+    .failure(
+      newText("<b>Leider falsch!</b>")
+        .color("Crimson")
+        .center()
+        .print())
+  ,
+
+  // Wait for feedback and to display which option was selected
+  newTimer("wait", 1000)
+    .start()
+    .wait()
+] : []);
+
 // Exercise
 Template("exercise.csv", row =>
     newTrial("exercise",
@@ -187,48 +228,7 @@ Template("exercise.csv", row =>
             .remove()
         ,
     // Optional question display
-    ( row.QUESTION=="1" ? [
-        newText( "answer_correct" , row.CORRECT ),
-        newText( "answer_wrong" , row.WRONG ),
-
-       newCanvas("Canvas", 600, 100)
-          .center()
-                .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
-                .add(   0 , 50 , newText("1 =") )
-                .add( 300 , 50 , newText("2 =") )
-                .add(  40 , 50 , getText("answer_correct") )
-                .add( 340 , 50 , getText("answer_wrong") )
-                .print()
-        ,
-       // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
-       newSelector("answer")
-            .add( getText("answer_correct") , getText("answer_wrong") )
-            .shuffle()
-            .keys("1","2")
-            .log()
-            .print()
-            .once()
-            .wait()
-            .test.selected( "answer_correct" )
-            .success(
-                newText("<b>Richtig!</b>")
-                    .color("LightGreen")
-                    .center()
-                    .print())
-            .failure( 
-                newText("<b>Leider falsch!</b>")
-                    .color("Crimson")
-                    .center()
-                    .print())
-            ,
-
-       // Wait for feedback and to display which option was selected
-        newTimer("wait", 1000)
-            .start()
-            .wait()
-    ] : [
-        null
-    ])
+             askQuestion(row)
     )
     .log( "item"      , row.ITEM)
     .log( "condition" , row.CONDITION)
@@ -256,53 +256,7 @@ Template("experiment.csv", row =>
             .remove()
         ,
     // Optional question display
-    ( row.QUESTION=="1" ? [
-        newText( "answer_correct" , row.CORRECT ),
-        newText( "answer_wrong" , row.WRONG ),
-        newVar( "computedAccuracy")
-            .set(getVar("ACCURACY"))
-            .set(v=>v.filter(a=>a===true).length/v.length)
-            ,
-       newCanvas("Canvas", 600, 100)
-          .center()
-                .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
-                .add(   0 , 50 , newText("1 =") )
-                .add( 300 , 50 , newText("2 =") )
-                .add(  40 , 50 , getText("answer_correct") )
-                .add( 340 , 50 , getText("answer_wrong") )
-                .print()
-        ,
-       // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
-       newSelector("answer")
-            .add( getText("answer_correct") , getText("answer_wrong") )
-            .shuffle()
-            .keys("1","2")
-            .log()
-            .print()
-            .once()
-            .wait()
-            .test.selected( "answer_correct" )
-            .success( getVar("ACCURACY").set(v=>[...v,true]) )
-            .failure( 
-                getVar("ACCURACY").set(v=>[...v,false]),
-                newText("<b>Leider falsch!</b>")
-                    .color("Crimson")
-                    .center()
-                    .print()
-                ,
-                // Penalty for the wrong answer is waiting 1000 ms before continuing
-                newTimer("wait", 1000)
-                    .start()
-                    .wait() )
-            ,
-
-       // Wait briefly to display which option was selected
-        newTimer("wait", 300)
-            .start()
-            .wait()
-    ] : [
-        null
-    ])
+              askQuestion(row)
     )
     .log( "list"      , row.LIST)
     .log( "item"      , row.ITEM)
