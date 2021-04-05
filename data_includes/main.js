@@ -261,7 +261,7 @@ newTrial( "start_experiment" ,
 Template("experiment.csv", row =>
   newTrial("experiment-"+row.TYPE,
               newText('*').print(),
-              newButton("finish priming").print().wait(),
+              newKey(" ").wait(),
            // Dashed sentence
            newController("DashedSentence", {s : row.SENTENCE})
            .center()
