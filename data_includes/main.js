@@ -4,7 +4,7 @@ PennController.ResetPrefix(null); // Shorten command names (keep this line here)
 
 const voucher = b64_md5((Date.now() + Math.random()).toString()) // Voucher code generator
 
-// Inject a question into a trial
+// Optionally inject a question into a trial
 const askQuestion = (row) => (row.QUESTION=="1" ? [
   newText( "answer_correct" , row.CORRECT ),
   newText( "answer_wrong" , row.WRONG ),
@@ -228,7 +228,6 @@ Template("exercise.csv", row =>
             .wait()
             .remove()
         ,
-    // Optional question display
              askQuestion(row)
     )
     .log( "item"      , row.ITEM)
@@ -256,7 +255,6 @@ Template("experiment.csv", row =>
             .wait()
             .remove()
         ,
-    // Optional question display
               askQuestion(row)
     )
     .log( "list"      , row.LIST)
