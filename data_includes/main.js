@@ -4,6 +4,39 @@ PennController.ResetPrefix(null); // Shorten command names (keep this line here)
 
 const voucher = b64_md5((Date.now() + Math.random()).toString()) // Voucher code generator
 
+// Optionally Inject a question into a trial
+const askQuestion = (successCallback, failureCallback, waitTime) => (row) => (row.QUESTION=="1" ? [
+  newText( "answer_correct" , row.CORRECT ),
+  newText( "answer_wrong" , row.WRONG ),
+
+  newCanvas("Canvas", 600, 100)
+    .center()
+    .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
+    .add(   0 , 50 , newText("1 =") )
+    .add( 300 , 50 , newText("2 =") )
+    .add(  40 , 50 , getText("answer_correct") )
+    .add( 340 , 50 , getText("answer_wrong") )
+    .print()
+  ,
+  // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
+  newSelector("answer")
+    .add( getText("answer_correct") , getText("answer_wrong") )
+    .shuffle()
+    .keys("1","2")
+    .log()
+    .print()
+    .once()
+    .wait()
+    .test.selected( "answer_correct" )
+    .success(successCallback())
+    .failure(failureCallback()),
+
+  // Wait for feedback and to display which option was selected
+  newTimer("wait", waitTime)
+    .start()
+    .wait()
+] : []);
+
 const askExerciseQuestion = askQuestion(
   () => newText("<b>Richtig!</b>")
     .color("LightGreen")
@@ -31,40 +64,6 @@ const askTrialQuestion = askQuestion(
   ],
   300
 );
-
-// Optionally Inject a question into a trial
-const askQuestion = (successCallback, failureCallback, waitTime) => (row) => (row.QUESTION=="1" ? [
-  newText( "answer_correct" , row.CORRECT ),
-  newText( "answer_wrong" , row.WRONG ),
-
-  newCanvas("Canvas", 600, 100)
-    .center()
-    .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
-    .add(   0 , 50 , newText("1 =") )
-    .add( 300 , 50 , newText("2 =") )
-    .add(  40 , 50 , getText("answer_correct") )
-    .add( 340 , 50 , getText("answer_wrong") )
-    .print()
-  ,
-  // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
-  newSelector("answer")
-    .add( getText("answer_correct") , getText("answer_wrong") )
-    .shuffle()
-    .keys("1","2")
-    .log()
-    .print()
-    .once()
-    .wait()
-    .test.selected( "answer_correct" )
-    .success(successCallback())
-    .failure(failureCallback())
-  ,
-
-  // Wait for feedback and to display which option was selected
-  newTimer("wait", waitTime)
-    .start()
-    .wait()
-] : []);
 
 Header(
     // Declare global variables to store the participant's ID and demographic information
