@@ -28,8 +28,8 @@ const askQuestion = (successCallback, failureCallback, waitTime) => (row) => (ro
     .once()
     .wait()
     .test.selected( "answer_correct" )
-    .success(successCallback())
-    .failure(failureCallback()),
+    .success.apply(null, successCallback())
+    .failure.apply(null, failureCallback()),
 
   // Wait for feedback and to display which option was selected
   newTimer("wait", waitTime)
@@ -38,19 +38,13 @@ const askQuestion = (successCallback, failureCallback, waitTime) => (row) => (ro
 ] : []);
 
 const askExerciseQuestion = askQuestion(
-  () => newText("<b>Richtig!</b>")
-    .color("LightGreen")
-    .center()
-    .print(),
-  () => newText("<b>Leider falsch!</b>")
-    .color("Crimson")
-    .center()
-    .print(),
+  () => [newText("<b>Richtig!</b>").color("LightGreen").center().print()],
+  () => [newText("<b>Leider falsch!</b>").color("Crimson").center().print()],
   1000
 );
 
 const askTrialQuestion = askQuestion(
-  () => getVar("ACCURACY").set(v=>[...v,true]),
+  () => [getVar("ACCURACY").set(v=>[...v,true])],
   () => [
     getVar("ACCURACY").set(v=>[...v,false]),
     newText("<b>Leider falsch!</b>")
