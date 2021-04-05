@@ -2,29 +2,41 @@
 
 function boolToInt(x) { if (x) return 1; else return 0; }
 
+function setOptions() {
+  this.cssPrefix = this.options._cssPrefix;
+  this.utils = this.options._utils;
+  this.finishedCallback = this.options._finishedCallback;
+
+  const splitRegex = this.options.splitRegex ? this.options.splitRegex : /[ \t]+/;
+
+  if (typeof(this.options.s) == "string") {
+    // replace all linebreaks (and surrounding space) with 'space-return-space'
+    var inputString = this.options.s.replace(/\s*[\r\n]\s*/g, " \r ");
+    this.words = inputString.split(splitRegex);
+  } else {
+    assert_is_arraylike(this.options.s, "Bad value for 's' option of DashedSentence.");
+    this.words = this.options.s;
+  }
+  this.blankText = dget(this.options,"blankText", "\u2014\u2014");// Replace with mdash
+  this.showAhead = dget(this.options, "showAhead", true);
+  this.showBehind = dget(this.options, "showBehind", true);
+  this.hideUnderscores = dget(this.options, "hideUnderscores", true);
+
+  // Defaults.
+  this.unshownBorderColor = dget(this.options, "unshownBorderColor", "#9ea4b1");
+  this.shownBorderColor = dget(this.options, "shownBorderColor", "black");
+  this.unshownWordColor = dget(this.options, "unshownWordColor", this.background);
+  this.shownWordColor = dget(this.options, "shownWordColor", "black");
+
+  this.sentenceDescType = dget(this.options, "sentenceDescType", "literal");
+}
+
 define_ibex_controller({
   name: "SelfPacedReadingParadigmSentence",
 
   jqueryWidget: {
     _init: function() {
-      this.cssPrefix = this.options._cssPrefix;
-      this.utils = this.options._utils;
-      this.finishedCallback = this.options._finishedCallback;
-
-      const splitRegex = this.options.splitRegex ? this.options.splitRegex : /[ \t]+/;
-
-      if (typeof(this.options.s) == "string") {
-        // replace all linebreaks (and surrounding space) with 'space-return-space'
-        var inputString = this.options.s.replace(/\s*[\r\n]\s*/g, " \r ");
-        this.words = inputString.split(splitRegex);
-      } else {
-        assert_is_arraylike(this.options.s, "Bad value for 's' option of DashedSentence.");
-        this.words = this.options.s;
-      }
-      this.blankText = dget(this.options,"blankText", "\u2014\u2014");// Replace with mdash
-      this.showAhead = dget(this.options, "showAhead", true);
-      this.showBehind = dget(this.options, "showBehind", true);
-
+      setOptions.bind(this)();
       this.currentWord = 0;
 
       // Is there a "stopping point" specified?
@@ -37,7 +49,6 @@ define_ibex_controller({
         }
       }
 
-      this.hideUnderscores = dget(this.options, "hideUnderscores", true);
       if (this.hideUnderscores) {
         this.words = $.map(this.words, function(word) { return word.replace(/_/g, ' ') });
       }
@@ -51,21 +62,14 @@ define_ibex_controller({
       if (this.isIE)
         this.background = "white";
 
-      // Defaults.
-      this.unshownBorderColor = dget(this.options, "unshownBorderColor", "#9ea4b1");
-      this.shownBorderColor = dget(this.options, "shownBorderColor", "black");
-      this.unshownWordColor = dget(this.options, "unshownWordColor", this.background);
-      this.shownWordColor = dget(this.options, "shownWordColor", "black");
-
       // Precalculate MD5 of sentence.
-      this.sentenceDescType = dget(this.options, "sentenceDescType", "literal");
       assert(this.sentenceDescType == "md5" || this.sentenceDescType == "literal", "Bad value for 'sentenceDescType' option of DashedSentence.");
       if (this.sentenceDescType == "md5") {
         var canonicalSentence = this.words.join(' ');
         this.sentenceDesc = hex_md5(canonicalSentence);
       }
       else {
-        if (typeof(this.options.s) == "string")
+        if (typeof(this.options.s) === "string")
           this.sentenceDesc = csv_url_encode(this.options.s);
         else
           this.sentenceDesc = csv_url_encode(this.options.s.join(' '));
