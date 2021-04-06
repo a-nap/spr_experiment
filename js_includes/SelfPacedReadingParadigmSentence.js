@@ -64,29 +64,31 @@ function setOptions() {
   this.stoppingPoint = this.words.length;
 }
 
-const onKeyDown = (state) => (event) => {
-  var time = new Date().getTime();
-
-  if (event.keyCode === 32) {
-    if (state.currentWord > 0 && state.currentWord <= state.stoppingPoint) {
-      var rs = state.sprResults[state.currentWord-1];
-      rs[0] = time;
-      rs[1] = state.previousTime;
-    }
-    state.previousTime = time;
-
-    if (state.currentWord - 1 >= 0)
-      state.blankWord(state.currentWord - 1);
-    if (state.currentWord < state.stoppingPoint)
-      state.showWord(state.currentWord);
-    ++(state.currentWord);
-    if (state.currentWord > state.stoppingPoint) {
-      state.processSprResults();
-      state.finishedCallback(state.resultsLines);
-    }
+const advanceToken = (startTime, state) => {
+  if (state.currentWord > 0 && state.currentWord <= state.stoppingPoint) {
+    var rs = state.sprResults[state.currentWord-1];
+    rs[0] = startTime;
+    rs[1] = state.previousTime;
   }
+  state.previousTime = startTime;
 
-  return event.keyCode === 32;
+  if (state.currentWord - 1 >= 0)
+    state.blankWord(state.currentWord - 1);
+  if (state.currentWord < state.stoppingPoint)
+    state.showWord(state.currentWord);
+  ++(state.currentWord);
+  if (state.currentWord > state.stoppingPoint) {
+    state.processSprResults();
+    state.finishedCallback(state.resultsLines);
+  }
+}
+
+const onKeyDown = (state) => (event) => {
+  if (event.keyCode === 32) {
+    advanceToken(new Date().getTime(), state)
+    return true;
+  }
+  return false;
 }
 
 define_ibex_controller({
