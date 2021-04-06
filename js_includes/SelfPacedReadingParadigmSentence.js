@@ -136,7 +136,14 @@ define_ibex_controller({
 
       prepareDashedSentence.apply(this);
 
-      this.safeBind($(document), 'keydown', onKeyDown(this));
+      const safeBind = this.safeBind;
+      this.safeBind($(document), 'keydown', (event) => {
+        // skip first space bar, only then register paging event listener
+        if (event.keyCode === 32) {
+          $(document).unbind('keydown');
+          safeBind($(document), 'keydown', onKeyDown(this));
+        }
+      });
 
         // For iPhone/iPod touch -- add button for going to next word.
         if (isIPhone) {
