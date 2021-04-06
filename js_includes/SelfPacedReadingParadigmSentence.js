@@ -29,6 +29,7 @@ function setOptions() {
   this.shownBorderColor = dget(this.options, "shownBorderColor", "black");
 
   this.sentenceDescType = dget(this.options, "sentenceDescType", "literal");
+  this.stoppingPoint = this.words.length;
 }
 
 define_ibex_controller({
@@ -38,16 +39,6 @@ define_ibex_controller({
     _init: function() {
       setOptions.bind(this)();
       this.currentWord = 0;
-
-      // Is there a "stopping point" specified?
-      this.stoppingPoint = this.words.length;
-      for (var i = 0; i < this.words.length; ++i) {
-        if (stringStartsWith("@", this.words[i])) {
-          this.words[i] = this.words[i].substring(1);
-          this.stoppingPoint = i + 1;
-          break;
-        }
-      }
 
       if (this.hideUnderscores) {
         this.words = $.map(this.words, function(word) { return word.replace(/_/g, ' ') });
