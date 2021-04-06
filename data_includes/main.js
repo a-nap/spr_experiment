@@ -4,6 +4,61 @@ PennController.ResetPrefix(null); // Shorten command names (keep this line here)
 
 const voucher = b64_md5((Date.now() + Math.random()).toString()) // Voucher code generator
 
+// Optionally Inject a question into a trial
+const askQuestion = (successCallback, failureCallback, waitTime) => (row) => (row.QUESTION=="1" ? [
+  newText( "answer_correct" , row.CORRECT ),
+  newText( "answer_wrong" , row.WRONG ),
+
+  newCanvas("Canvas", 600, 100)
+    .center()
+    .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
+    .add(   0 , 50 , newText("1 =") )
+    .add( 300 , 50 , newText("2 =") )
+    .add(  40 , 50 , getText("answer_correct") )
+    .add( 340 , 50 , getText("answer_wrong") )
+    .print()
+  ,
+  // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
+  newSelector("answer")
+    .add( getText("answer_correct") , getText("answer_wrong") )
+    .shuffle()
+    .keys("1","2")
+    .log()
+    .print()
+    .once()
+    .wait()
+    .test.selected( "answer_correct" )
+    .success.apply(null, successCallback())
+    .failure.apply(null, failureCallback()),
+
+  // Wait for feedback and to display which option was selected
+  newTimer("wait", waitTime)
+    .start()
+    .wait()
+] : []);
+
+const askExerciseQuestion = askQuestion(
+  () => [newText("<b>Richtig!</b>").color("LightGreen").center().print()],
+  () => [newText("<b>Leider falsch!</b>").color("Crimson").center().print()],
+  1000
+);
+
+const askTrialQuestion = askQuestion(
+  () => [getVar("ACCURACY").set(v=>[...v,true])],
+  () => [
+    getVar("ACCURACY").set(v=>[...v,false]),
+    newText("<b>Leider falsch!</b>")
+      .color("Crimson")
+      .center()
+      .print(),
+    // Penalty for the wrong answer is waiting 1000 ms before continuing
+    newTimer("wait", 1000)
+      .start()
+      .wait()
+  ],
+  300
+);
+
 Header(
     // Declare global variables to store the participant's ID and demographic information
     newVar("ID").global(),
@@ -177,59 +232,15 @@ newTrial("instructions",
 
 // Exercise
 Template("exercise.csv", row =>
-    newTrial("exercise",
-        // Dashed sentence
-        newController("DashedSentence", {s : row.SENTENCE})
-            .center()
-            .print()
-            .log()
-            .wait()
-            .remove()
-        ,
-    // Optional question display
-    ( row.QUESTION=="1" ? [
-        newText( "answer_correct" , row.CORRECT ),
-        newText( "answer_wrong" , row.WRONG ),
-
-       newCanvas("Canvas", 600, 100)
-          .center()
-                .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
-                .add(   0 , 50 , newText("1 =") )
-                .add( 300 , 50 , newText("2 =") )
-                .add(  40 , 50 , getText("answer_correct") )
-                .add( 340 , 50 , getText("answer_wrong") )
-                .print()
-        ,
-       // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
-       newSelector("answer")
-            .add( getText("answer_correct") , getText("answer_wrong") )
-            .shuffle()
-            .keys("1","2")
-            .log()
-            .print()
-            .once()
-            .wait()
-            .test.selected( "answer_correct" )
-            .success(
-                newText("<b>Richtig!</b>")
-                    .color("LightGreen")
-                    .center()
-                    .print())
-            .failure( 
-                newText("<b>Leider falsch!</b>")
-                    .color("Crimson")
-                    .center()
-                    .print())
-            ,
-
-       // Wait for feedback and to display which option was selected
-        newTimer("wait", 1000)
-            .start()
-            .wait()
-    ] : [
-        null
-    ])
-    )
+  newTrial("exercise",
+           // Dashed sentence
+           newController("DashedSentence", {s : row.SENTENCE})
+           .center()
+           .print()
+           .log()
+           .wait()
+           .remove(),
+           askExerciseQuestion(row))
     .log( "item"      , row.ITEM)
     .log( "condition" , row.CONDITION)
 )
@@ -246,64 +257,15 @@ newTrial( "start_experiment" ,
 
 // Experimental trial
 Template("experiment.csv", row =>
-    newTrial( "experiment-"+row.TYPE,
-        // Dashed sentence
-        newController("DashedSentence", {s : row.SENTENCE})
-            .center()
-            .print()
-            .log()
-            .wait()
-            .remove()
-        ,
-    // Optional question display
-    ( row.QUESTION=="1" ? [
-        newText( "answer_correct" , row.CORRECT ),
-        newText( "answer_wrong" , row.WRONG ),
-        newVar( "computedAccuracy")
-            .set(getVar("ACCURACY"))
-            .set(v=>v.filter(a=>a===true).length/v.length)
-            ,
-       newCanvas("Canvas", 600, 100)
-          .center()
-                .add(   0 ,  0,  newText("Wer oder was wurde im Satz erwähnt?"))
-                .add(   0 , 50 , newText("1 =") )
-                .add( 300 , 50 , newText("2 =") )
-                .add(  40 , 50 , getText("answer_correct") )
-                .add( 340 , 50 , getText("answer_wrong") )
-                .print()
-        ,
-       // Shuffle the position of the answers. Answer keys are 1 for left and 2 for right
-       newSelector("answer")
-            .add( getText("answer_correct") , getText("answer_wrong") )
-            .shuffle()
-            .keys("1","2")
-            .log()
-            .print()
-            .once()
-            .wait()
-            .test.selected( "answer_correct" )
-            .success( getVar("ACCURACY").set(v=>[...v,true]) )
-            .failure( 
-                getVar("ACCURACY").set(v=>[...v,false]),
-                newText("<b>Leider falsch!</b>")
-                    .color("Crimson")
-                    .center()
-                    .print()
-                ,
-                // Penalty for the wrong answer is waiting 1000 ms before continuing
-                newTimer("wait", 1000)
-                    .start()
-                    .wait() )
-            ,
-
-       // Wait briefly to display which option was selected
-        newTimer("wait", 300)
-            .start()
-            .wait()
-    ] : [
-        null
-    ])
-    )
+  newTrial("experiment-"+row.TYPE,
+           // Dashed sentence
+           newController("DashedSentence", {s : row.SENTENCE})
+           .center()
+           .print()
+           .log()
+           .wait()
+           .remove(),
+           askTrialQuestion(row))
     .log( "list"      , row.LIST)
     .log( "item"      , row.ITEM)
     .log( "condition" , row.CONDITION)
