@@ -68,9 +68,8 @@ const onKeyDown = (state) => (event) => {
   var time = new Date().getTime();
 
   if (event.keyCode === 32) {
-    var word = state.currentWord;
-    if (word > 0 && word <= state.stoppingPoint) {
-      var rs = state.sprResults[word-1];
+    if (state.currentWord > 0 && state.currentWord <= state.stoppingPoint) {
+      var rs = state.sprResults[state.currentWord-1];
       rs[0] = time;
       rs[1] = state.previousTime;
     }
