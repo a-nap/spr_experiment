@@ -8,6 +8,38 @@ const splitWords = (inputString, regex = /[ \t]+/) =>
       .replace(/\s*[\r\n]\s*/g, " \r ")
       .split(regex);
 
+const prepareDashedSentence = () => {
+  this.wordISpans = []; // Inner spans.
+  this.wordOSpans = []; // Outer spans.
+  this.owsnjq = []; // 'outer word spans no jQuery'.
+  this.iwsnjq = []; // 'inner word spans no jQuery'.
+  for (var j = 0; j < this.words.length; ++j) {
+    if ( this.words[j] == "\r" ) {
+      this.mainDiv.append('<br/>');
+
+      if (j <= this.stoppingPoint)
+        this.stoppingPoint--;
+      continue;
+    }
+
+    var ispan;
+    var ospan = $(document.createElement("span"))
+        .addClass(this.cssPrefix + 'ospan')
+        .append(ispan = $(document.createElement("span"))
+                .addClass(this.cssPrefix + 'ispan')
+                .text(this.words[j]));
+    if (! this.showAhead)
+      ospan.css('border-color', this.background);
+    this.mainDiv.append(ospan);
+    if (j + 1 < this.words.length)
+      this.mainDiv.append("&nbsp; ");
+    this.wordISpans.push(ispan);
+    this.wordOSpans.push(ospan);
+    this.iwsnjq.push(ispan[0]);
+    this.owsnjq.push(ospan[0]);
+  }
+}
+
 function setOptions() {
   this.cssPrefix = this.options._cssPrefix;
   this.utils = this.options._utils;
@@ -30,6 +62,36 @@ function setOptions() {
 
   this.sentenceDescType = dget(this.options, "sentenceDescType", "literal");
   this.stoppingPoint = this.words.length;
+}
+
+const onKeyDown = (state) => (event) => {
+  var time = new Date().getTime();
+  var code = event.keyCode;
+
+  if (code == 32) {
+    var word = state.currentWord;
+    if (word > 0 && word <= state.stoppingPoint) {
+      var rs = state.sprResults[word-1];
+      rs[0] = time;
+      rs[1] = state.previousTime;
+    }
+    state.previousTime = time;
+
+    if (state.currentWord - 1 >= 0)
+      state.blankWord(state.currentWord - 1);
+    if (state.currentWord < state.stoppingPoint)
+      state.showWord(state.currentWord);
+    ++(state.currentWord);
+    if (state.currentWord > state.stoppingPoint) {
+      state.processSprResults();
+      state.finishedCallback(state.resultsLines);
+    }
+    return false;
+    // ***
+  }
+  else {
+    return true;
+  }
 }
 
 define_ibex_controller({
@@ -76,69 +138,9 @@ define_ibex_controller({
       this.previousTime = null;
 
       // preparation of dashed sentence starts here
-        this.wordISpans = []; // Inner spans.
-        this.wordOSpans = []; // Outer spans.
-        this.owsnjq = []; // 'outer word spans no jQuery'.
-        this.iwsnjq = []; // 'inner word spans no jQuery'.
-        for (var j = 0; j < this.words.length; ++j) {
-          if ( this.words[j] == "\r" ) {
-            this.mainDiv.append('<br/>');
+      prepareDashedSentence.bind(this)();
 
-            if (j <= this.stoppingPoint)
-              this.stoppingPoint--;
-            continue;
-          }
-
-          var ispan;
-          var ospan = $(document.createElement("span"))
-              .addClass(this.cssPrefix + 'ospan')
-              .append(ispan = $(document.createElement("span"))
-                      .addClass(this.cssPrefix + 'ispan')
-                      .text(this.words[j]));
-          if (! this.showAhead)
-            ospan.css('border-color', this.background);
-          this.mainDiv.append(ospan);
-          if (j + 1 < this.words.length)
-            this.mainDiv.append("&nbsp; ");
-          this.wordISpans.push(ispan);
-          this.wordOSpans.push(ospan);
-          this.iwsnjq.push(ispan[0]);
-          this.owsnjq.push(ospan[0]);
-        }
-
-      // spacing through the sentence starts here
-
-      var t = this;
-
-        this.safeBind($(document), 'keydown', function(e) {
-          var time = new Date().getTime();
-          var code = e.keyCode;
-
-          if (code == 32) {
-            var word = t.currentWord;
-            if (word > 0 && word <= t.stoppingPoint) {
-              var rs = t.sprResults[word-1];
-              rs[0] = time;
-              rs[1] = t.previousTime;
-            }
-            t.previousTime = time;
-
-            if (t.currentWord - 1 >= 0)
-              t.blankWord(t.currentWord - 1);
-            if (t.currentWord < t.stoppingPoint)
-              t.showWord(t.currentWord);
-            ++(t.currentWord);
-            if (t.currentWord > t.stoppingPoint) {
-              t.processSprResults();
-              t.finishedCallback(t.resultsLines);
-            }
-            return false;
-            // ***
-          }
-          else {
-            return true;
-          }
-        });
+      this.safeBind($(document), 'keydown', onKeyDown(this));
 
         // For iPhone/iPod touch -- add button for going to next word.
         if (isIPhone) {
