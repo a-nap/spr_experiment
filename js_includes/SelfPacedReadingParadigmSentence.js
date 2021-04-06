@@ -8,7 +8,7 @@ const splitWords = (inputString, regex = /[ \t]+/) =>
       .replace(/\s*[\r\n]\s*/g, " \r ")
       .split(regex);
 
-const prepareDashedSentence = () => {
+function prepareDashedSentence() {
   this.wordISpans = []; // Inner spans.
   this.wordOSpans = []; // Outer spans.
   this.owsnjq = []; // 'outer word spans no jQuery'.
@@ -99,7 +99,7 @@ define_ibex_controller({
 
   jqueryWidget: {
     _init: function() {
-      setOptions.bind(this)();
+      setOptions.apply(this);
       this.currentWord = 0;
 
       if (this.hideUnderscores) {
@@ -137,8 +137,7 @@ define_ibex_controller({
         this.sprResults[i] = new Array(2);
       this.previousTime = null;
 
-      // preparation of dashed sentence starts here
-      prepareDashedSentence.bind(this)();
+      prepareDashedSentence.apply(this);
 
       this.safeBind($(document), 'keydown', onKeyDown(this));
 
