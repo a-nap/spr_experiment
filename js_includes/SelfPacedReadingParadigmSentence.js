@@ -66,9 +66,8 @@ function setOptions() {
 
 const onKeyDown = (state) => (event) => {
   var time = new Date().getTime();
-  var code = event.keyCode;
 
-  if (code == 32) {
+  if (event.keyCode === 32) {
     var word = state.currentWord;
     if (word > 0 && word <= state.stoppingPoint) {
       var rs = state.sprResults[word-1];
@@ -86,12 +85,9 @@ const onKeyDown = (state) => (event) => {
       state.processSprResults();
       state.finishedCallback(state.resultsLines);
     }
-    return false;
-    // ***
   }
-  else {
-    return true;
-  }
+
+  return event.keyCode === 32;
 }
 
 define_ibex_controller({
