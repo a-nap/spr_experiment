@@ -28,8 +28,12 @@ const askQuestion = (successCallback, failureCallback, waitTime) => (row) => (ro
     .once()
     .wait()
     .test.selected( "answer_correct" )
-    .success.apply(null, successCallback())
-    .failure.apply(null, failureCallback()),
+    .success.apply(null, successCallback().concat(
+        [getText("answer_correct").css("border-bottom", "5px solid lightCoral")]
+    ))
+    .failure.apply(null, failureCallback().concat(
+        [getText("answer_wrong").css("border-bottom", "5px solid lightCoral")]
+    )),
 
   // Wait for feedback and to display which option was selected
   newTimer("wait", waitTime)
