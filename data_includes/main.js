@@ -279,7 +279,6 @@ Template("experiment.csv", row =>
            .wait()
            .remove(),
            askTrialQuestion(row))
-           newPrimer(),
     .log( "list"      , row.LIST)
     .log( "item"      , row.ITEM)
     .log( "condition" , row.CONDITION)
