@@ -55,6 +55,8 @@ const askTrialQuestion = askQuestion(
       .color("Crimson")
       .center()
       .print(),
+    // need to repeat the css code, unfortunately, because of the time that follows
+    getText("answer_wrong").css("border-bottom", "5px solid lightCoral"),
     // Penalty for the wrong answer is waiting 1000 ms before continuing
     newTimer("wait", 1000)
       .start()
