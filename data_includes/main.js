@@ -2,7 +2,7 @@ PennController.ResetPrefix(null); // Shorten command names (keep this line here)
 
 // DebugOff()   // Uncomment this line only when you are 100% done designing your experiment
 
-const voucher = b64_md5((Date.now() + Math.random()).toString()) // Voucher code generator
+const voucher = b64_md5((Date.now() + Math.random()).toString()); // Voucher code generator
 
 // Optionally Inject a question into a trial
 const askQuestion = (successCallback, failureCallback, waitTime) => (row) => (row.QUESTION=="1" ? [
@@ -59,6 +59,17 @@ const askTrialQuestion = askQuestion(
   300
 );
 
+// display a primer that can be clicked away by pressing space bar
+const newPrimer = () => [
+  newText('primer','*')
+    .css("font-size", "30pt")
+    .css("margin-top", "8px")
+    .center()
+    .print(),
+  newKey(" ").wait(),
+  getText('primer').remove(),
+];
+
 Header(
     // Declare global variables to store the participant's ID and demographic information
     newVar("ID").global(),
@@ -68,7 +79,7 @@ Header(
     newVar("AGE").global(),
     newVar("GENDER").global(),
     newVar("HAND").global(),
-    newVar("ACCURACY", []).global() 
+    newVar("ACCURACY", []).global()
 )
  // Add the particimant info to all trials' results lines
 .log( "id"     , getVar("ID") )
@@ -78,10 +89,10 @@ Header(
 .log( "age"    , getVar("AGE") )
 .log( "gender" , getVar("GENDER") )
 .log( "hand"   , getVar("HAND") )
-.log( "code"   , voucher )
+.log( "code"   , voucher );
 
 // Sequence of events: consent to ethics statement required to start the experiment, participant information, instructions, exercise, transition screen, main experiment, result logging, and end screen.
-Sequence("ethics", "setcounter", "participants", "instructions", randomize("exercise"), "start_experiment", rshuffle("experiment-filler", "experiment-item"), SendResults(), "end")
+ Sequence("ethics", "setcounter", "participants", "instructions", randomize("exercise"), "start_experiment", rshuffle("experiment-filler", "experiment-item"), SendResults(), "end")
 
 // Ethics agreement: participants must agree before continuing
 newTrial("ethics",
@@ -103,14 +114,14 @@ newTrial("ethics",
         .disable()
         .print()
         .wait()
-)
+);
 
 // Start the next list as soon as the participant agrees to the ethics statement
 // This is different from PCIbex's normal behavior, which is to move to the next list once 
 // the experiment is completed. In my experiment, multiple participants are likely to start 
 // the experiment at the same time, leading to a disproportionate assignment of participants
 // to lists.
-SetCounter("setcounter")
+SetCounter("setcounter");
 
 // Participant information: questions appear as soon as information is input
 newTrial("participants",
@@ -216,7 +227,7 @@ newTrial("participants",
     getVar("AGE")    .set( getTextInput("input_age") ),
     getVar("GENDER") .set( getScale("input_gender") ),
     getVar("HAND")   .set( getScale("input_hand") )
-)
+);
 
 // Instructions
 newTrial("instructions",
@@ -228,13 +239,14 @@ newTrial("instructions",
         .cssContainer({"margin":"1em"})
         .print()
         .wait()
-)
+);
 
 // Exercise
 Template("exercise.csv", row =>
   newTrial("exercise",
+           newPrimer(),
            // Dashed sentence
-           newController("DashedSentence", {s : row.SENTENCE})
+           newController("SelfPacedReadingParadigmSentence", {s : row.SENTENCE, splitRegex: /\*/})
            .center()
            .print()
            .log()
@@ -243,7 +255,7 @@ Template("exercise.csv", row =>
            askExerciseQuestion(row))
     .log( "item"      , row.ITEM)
     .log( "condition" , row.CONDITION)
-)
+);
 
 // Start experiment
 newTrial( "start_experiment" ,
@@ -253,11 +265,12 @@ newTrial( "start_experiment" ,
     newButton("go_to_experiment", "Experiment starten")
         .print()
         .wait()
-)
+);
 
 // Experimental trial
 Template("experiment.csv", row =>
-  newTrial("experiment-"+row.TYPE,
+    newTrial( "experiment-"+row.TYPE,
+              newPrimer(),
            // Dashed sentence
            newController("DashedSentence", {s : row.SENTENCE})
            .center()
@@ -269,7 +282,7 @@ Template("experiment.csv", row =>
     .log( "list"      , row.LIST)
     .log( "item"      , row.ITEM)
     .log( "condition" , row.CONDITION)
-)
+);
 
 // Final screen: explanation of the goal
 newTrial("end",
