@@ -36,7 +36,7 @@ principal researcher in order to receive compensation.
 In the exercise and the main experiment, the sentences are presented in 
 increments (phrase-by-phrase). 
 The participants control when each segment of the the sentence is presented by 
-pressing the space bar. At the begining of a trial, an asterisk (\*) appears. 
+pressing the space bar. At the beginning of a trial, an asterisk (\*) appears. 
 Then, the sentence is presented entirely, with letters substituted for dashes. 
 When the participants press the space bar, the first part of the sentence 
 appears in place of the dashes. The remainder of the sentence is still concealed 
@@ -44,11 +44,14 @@ behind dashes. Each time the participants press the space bar, a new sentence
 segment appears and the previous one disappears. The participants can move 
 forward in the sentence but cannot revisit the sentence parts they have already 
 read. After the last segment, the trial ends with another press of the space bar. 
+
 The sentence presentation is occasionally followed by a question display. The 
-participants use two predetermined keys to answer the questions. In the practice 
-trials, feedback is provided for both correct and incorrect answers, but in the 
-experimental trials feedback and a slight delay are provided when an incorrect 
-answer is given. This is to discourage incorrect responses.
+participants use two predetermined keys to answer the questions. The two 
+possible answers are presented on the left and on the right of the screen. The 
+distribution of the answers is randomized. In the practice trials, feedback is 
+provided for both correct and incorrect answers, but in the experimental 
+trials feedback and a slight delay are provided when an incorrect answer is 
+given. This is to discourage incorrect responses.
 
 In the exercise, the order of the sentences is random. In the main experiment 
 procedure, the stimuli presentation is randomly shuffled between critical items
